@@ -33,7 +33,7 @@
 ;; See 'C-h v doom-font' for documentation and more examples of what they
 ;; accept. For example:
 ;;
-(setq doom-font (font-spec :family "GeistMono Nerd Font" :size 33)
+(setq doom-font (font-spec :family "GeistMono NF" :size 33)
       doom-variable-pitch-font (font-spec :family "Alegreya" :size 33))
 ;;
 ;; If you or Emacs can't find your font, use 'M-x describe-font' to look them
@@ -105,3 +105,49 @@
 (setq delete-by-moving-to-trash t)
 ;; Save automatically
 (setq auto-save-default t)
+
+;; Speed of which-key popup
+(setq which-key-idle-delay 0.2)
+
+;; Got this from Josh Blais' https://joshblais.com/blog/literate-doom-emacs-config
+(after! project
+  ;; Master project detection function - extensible for all project types
+  (add-hook 'project-find-functions
+            (lambda (dir)
+              (cond
+               ;; Go projects
+               ((locate-dominating-file dir "go.mod")
+                (cons 'transient (locate-dominating-file dir "go.mod")))
+
+               ;; Rust projects
+               ((locate-dominating-file dir "Cargo.toml")
+                (cons 'transient (locate-dominating-file dir "Cargo.toml")))
+
+               ;; Odin projects
+               ((locate-dominating-file dir "ols.json")
+                (cons 'transient (locate-dominating-file dir "ols.json")))
+
+               ;; Zig projects
+               ((locate-dominating-file dir "build.zig")
+                (cons 'transient (locate-dominating-file dir "build.zig")))
+
+               ;; Python projects (multiple markers)
+               ((or (locate-dominating-file dir "pyproject.toml")
+                    (locate-dominating-file dir "setup.py")
+                    (locate-dominating-file dir "requirements.txt"))
+                (cons 'transient (or (locate-dominating-file dir "pyproject.toml")
+                                     (locate-dominating-file dir "setup.py")
+                                     (locate-dominating-file dir "requirements.txt"))))
+
+               ;; Generic git projects (fallback)
+               ((locate-dominating-file dir ".git")
+                (cons 'transient (locate-dominating-file dir ".git")))))))
+
+
+(setq fancy-splash-image-file "splash/doom-emacs-color.png")
+
+
+;; Increase/Decrease Font size
+(map! "C-="   #'doom/increase-font-size
+      "C--"   #'doom/decrease-font-size
+      "C-0"   #'doom/reset-font-size)
