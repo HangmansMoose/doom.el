@@ -1,12 +1,20 @@
 ;;; $DOOMDIR/config.el -*- lexical-binding: t; -*-
 
+;; Performance optimizations
+(setq gc-cons-threshold (* 256 1024 1024))
+(setq read-process-output-max (* 4 1024 1024))
+(setq comp-deferred-compilation t)
+(setq comp-async-jobs-number 8)
+
+;; Garbage collector optimization
+(setq gcmh-idle-delay 5)
+(setq gcmh-high-cons-threshold (* 1024 1024 1024))
+
 ;; Place your private configuration here! Remember, you do not need to run 'doom
 ;; sync' after modifying this file!
 
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
 
-;; Custom Themes
-(add-to-list 'custom-theme-load-path "~/.config/doom/themes")
 
 ;; Some functionality uses this to identify you, e.g. GPG configuration, email
 ;; clients, file templates and snippets. It is optional.
@@ -25,8 +33,8 @@
 ;; See 'C-h v doom-font' for documentation and more examples of what they
 ;; accept. For example:
 ;;
-(setq doom-font (font-spec :family "MonaspiceNe NF" :size 32 :weight 'regular)
-      doom-variable-pitch-font (font-spec :family "LiterationSerif Nerd Font" :size 32))
+(setq doom-font (font-spec :family "GeistMono Nerd Font" :size 33)
+      doom-variable-pitch-font (font-spec :family "Alegreya" :size 33))
 ;;
 ;; If you or Emacs can't find your font, use 'M-x describe-font' to look them
 ;; up, `M-x eval-region' to execute elisp code, and 'M-x doom/reload-font' to
@@ -37,7 +45,21 @@
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
 ;;(setq doom-theme 'doom-one)
+
+;; Custom Themes
+(add-to-list 'custom-theme-load-path "~/.config/doom/themes")
 (setq doom-theme 'kanso-zen)
+
+;; Got this from Hlisseners personal doom config
+(custom-theme-set-faces! 'doom-tomorrow-night
+  '(default :background "#050505")
+  '(solaire-default-face :background "#101010"))
+
+;;(add-to-list 'default-frame-alist '(alpha-background . 80))
+
+(add-to-list 'default-frame-alist '(inhibit-double-buffering . t)) ; prevents flickering
+
+;;(add-to-list 'safe-local-variable-directories doom-modules-dir)
 
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
@@ -78,3 +100,8 @@
 ;;
 ;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
 ;; they are implemented.
+
+;; Send files to trash instead of fully deleting
+(setq delete-by-moving-to-trash t)
+;; Save automatically
+(setq auto-save-default t)
